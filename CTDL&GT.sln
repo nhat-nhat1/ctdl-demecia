@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36212.18 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Decima", "Decima\Decima.csproj", "{F9E0A142-C1D9-46B6-B767-E9A388EB2055}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9E0A142-C1D9-46B6-B767-E9A388EB2055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E0A142-C1D9-46B6-B767-E9A388EB2055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E0A142-C1D9-46B6-B767-E9A388EB2055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E0A142-C1D9-46B6-B767-E9A388EB2055}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5293A47-FF58-430C-B1E6-3C71F4DE2098}
+	EndGlobalSection
+EndGlobal
