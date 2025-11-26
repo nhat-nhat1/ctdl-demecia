@@ -259,35 +259,52 @@ namespace Decima
         static void timkiem()
         {
             Console.Clear();
+            Console.ResetColor();
+            Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Cyan;
             VeKhung("🔍 TÌM KIẾM SÁCH 🔍", 50);
             Console.ResetColor();
-            bool timthay = false;
-            Console.Write("🔢 Nhập mã sách bạn muốn tìm: ");
-            int k = int.Parse(Console.ReadLine());
-            foreach (var item in dict)
-            {
-                if (item.Key == k)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"\n✅ Tìm thấy sách mang mã số {k}");
-                    Console.ResetColor();
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-                    Console.ResetColor();
-                    Console.WriteLine($"📖 Tên Sách: {item.Value.Tensach}");
-                    Console.WriteLine($"✍️  Tác Giả: {item.Value.Tacgia}");
-                    Console.WriteLine($"📅 Năm Xuất Bản: {item.Value.Namxuatban}");
-                    Console.WriteLine($"📊 Số lượng còn lại: {item.Value.Soluongcon}");
-                    timthay = true;
-                    break;
-                }
-            }
-            if (!timthay)
+            Console.Write("📝 Nhập từ khóa (tên sách hoặc tác giả): ");
+            string keyword = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(keyword))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"❌ Không tìm thấy sách mang mã số {k}");
+                Console.WriteLine("❌ Vui lòng nhập từ khóa hợp lệ!");
                 Console.ResetColor();
+                khonggica();
+                return;
+            }
+
+            keyword = keyword.Trim();
+            var ketQua = dict
+                .Where(item =>
+                    item.Value.Tensach.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    item.Value.Tacgia.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                .ToList();
+
+            if (ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"❌ Không tìm thấy sách phù hợp với từ khóa \"{keyword}\"");
+                Console.ResetColor();
+                khonggica();
+                return;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\n✅ Tìm thấy {ketQua.Count} kết quả phù hợp:");
+            Console.ResetColor();
+            int stt = 1;
+            foreach (var item in ketQua)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                Console.WriteLine($"📘 Kết quả #{stt++} - Mã sách: {item.Key}");
+                Console.ResetColor();
+                Console.WriteLine($"📖 Tên Sách: {item.Value.Tensach}");
+                Console.WriteLine($"✍️  Tác Giả: {item.Value.Tacgia}");
+                Console.WriteLine($"📅 Năm Xuất Bản: {item.Value.Namxuatban}");
+                Console.WriteLine($"📊 Số lượng còn lại: {item.Value.Soluongcon}");
             }
             khonggica();
         }
@@ -440,6 +457,61 @@ namespace Decima
             }
         }
 
+        static void TaoSachTuDong()
+        {
+            Console.Clear();
+            Console.ResetColor();
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            VeKhung("⚙️ TẠO NHANH 10.000 SÁCH ⚙️", 50);
+            Console.ResetColor();
+
+            const int soLuong = 10000;
+            int startId = dict.Count > 0 ? dict.Keys.Max() + 1 : 1;
+            int endId = startId + soLuong - 1;
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"🚀 Đang tạo {soLuong} sách mới (ID {startId} → {endId})...");
+            Console.ResetColor();
+
+            for (int i = 0; i < soLuong; i++)
+            {
+                int id = startId + i;
+                string tensach = $"Auto Book #{id}";
+                string tacgia = $"Tác giả Auto {(i % 500) + 1}";
+                int namxuatban = 1980 + (i % 45);
+                int soluongcon = 10 + (i % 91);
+                dict[id] = new quanly(tensach, tacgia, namxuatban, soluongcon);
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\n✅ Đã tạo thành công {soLuong} sách mới.");
+            Console.ResetColor();
+            Console.WriteLine($"📊 Tổng số sách hiện tại: {dict.Count}");
+            Console.WriteLine("\n📋 5 sách mới nhất vừa tạo:");
+
+            int previewStart = Math.Max(startId, endId - 4);
+            for (int id = previewStart; id <= endId; id++)
+            {
+                if (!dict.ContainsKey(id)) continue;
+                var sach = dict[id];
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                Console.ResetColor();
+                Console.WriteLine($"🔢 Mã Sách: {id}");
+                Console.WriteLine($"📖 Tên Sách: {sach.Tensach}");
+                Console.WriteLine($"✍️  Tác Giả: {sach.Tacgia}");
+                Console.WriteLine($"📅 Năm Xuất Bản: {sach.Namxuatban}");
+                Console.WriteLine($"📊 Số lượng còn lại: {sach.Soluongcon}");
+            }
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\nℹ️  Dùng chức năng 1 để xem toàn bộ danh sách.");
+            Console.ResetColor();
+
+            khonggica();
+        }
+
         static void suasach()
         {
             Console.Clear();
@@ -477,7 +549,8 @@ namespace Decima
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("\n⏸️  Nhấn phím bất kỳ để quay lại menu...");
             Console.ResetColor();
-            Console.ReadLine();
+            Console.ReadKey(true);
+            Console.Clear();
         }
 
         static void laytsach()
@@ -885,11 +958,12 @@ namespace Decima
                 Console.ResetColor();
                 Console.ForegroundColor = ConsoleColor.White;
                 VeKhungMenu(50);
+                VeDongMenu("0. ⚙️ Tạo 10.000 sách tự động", 50);
                 VeDongMenu("1. 📋 Xem danh sách sách", 50);
                 VeDongMenu("2. ➕ Thêm sách", 49);
                 VeDongMenu("3. 📊 Sắp xếp sách (theo năm xuất bản)", 50);
                 VeDongMenu("4. 🗑️  Xóa sách", 51);
-                VeDongMenu("5. 🔍 Tìm kiếm sách (theo mã)", 50);
+                VeDongMenu("5. 🔍 Tìm kiếm sách (theo từ khóa)", 50);
                 VeDongMenu("6. 📦 Liệt kê các bộ sưu tập sách", 50);
                 VeDongMenu("7. ✏️  Cập nhật thông tin sách", 50);
                 VeDongMenu("8. 📥 Lấy sách", 50);
@@ -901,6 +975,7 @@ namespace Decima
                 int chon = int.Parse(Console.ReadLine());
                 switch (chon)
                 {
+                    case 0: TaoSachTuDong(); break;
                     case 1: xemdanhsach(); break;
                     case 2: themsach(); break;
                     case 3: sapxep(); break;
